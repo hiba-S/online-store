@@ -6,6 +6,19 @@ $.ajaxSetup({
         // 'Accept': 'application/json'
     }
 });
+
+let lastScrollTop = 0;
+$(window).scroll(function() {
+    let scrollTop = $(this).scrollTop();
+
+    if (scrollTop > lastScrollTop) {
+        $('.navbar').addClass('hidden');  // Hide on scroll down
+    } else {
+        $('.navbar').removeClass('hidden');  // Show on scroll up
+    }
+    lastScrollTop = scrollTop;
+});
+
 $(document).ready(function(){
 
     updateCartCount();

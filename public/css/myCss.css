@@ -21,3 +21,14 @@
     display: flex;
     gap: 5px;
 }
+
+.navbar {
+    position: fixed;
+    width: 100%;
+    top: 0;
+    transition: transform 0.3s ease-in-out;
+}
+
+.navbar.hidden {
+    transform: translateY(-100%);
+}
