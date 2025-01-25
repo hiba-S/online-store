@@ -16,3 +16,8 @@
     height: 7vw;
     object-fit: cover;
 }
+
+.card-buttons {
+    display: flex;
+    gap: 5px;
+}

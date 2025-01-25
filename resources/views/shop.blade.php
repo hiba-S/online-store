@@ -15,19 +15,20 @@
                             <span style="text-decoration-line: line-through">{{$product->price}}</span>
                         @endif
                         <span class="card-price">{{$product->discount?$product->price-($product->price*$product->discount/100):$product->price}}</span>
-                        @if (Auth::check())
-                        <a href="{{url('/add-to-cart/'.$product->id)}}">
-                            <button class="btn btn-primary add-to-cart-btn" type="button">
-                            <img src = "{{url('images/icons/cart.svg')}}" alt="cart icon"/>
-                            Add To Cart</button>
-                        </a>
-                        @endif
-                        @can('update', $product)
-                        <a href="{{url('/products/'.$product->id.'/edit')}}"><button class="btn btn-primary" type="button">Edit</button></a>
-                        @endcan
-                        @can('delete', $product)
-                        <a href="{{url('/products/'.$product->id.'/delete')}}"><button class="btn btn-primary" type="button">delete</button></a>
-                        @endcan
+                        <div class="card-buttons mt-2">
+                            @if (Auth::check())
+                            <button class="btn btn-primary add-to-cart-btn" data-product-id="{{ $product->id }}" type="button">
+                                <img src="{{url('images/icons/cart.svg')}}" alt="cart icon"/>
+                                Add To Cart
+                            </button>
+                            @endif
+                            @can('update', $product)
+                            <a href="{{url('/products/'.$product->id.'/edit')}}"><button class="btn btn-primary" type="button">Edit</button></a>
+                            @endcan
+                            @can('delete', $product)
+                            <a href="{{url('/products/'.$product->id.'/delete')}}"><button class="btn btn-primary" type="button">delete</button></a>
+                            @endcan
+                        </div>
                         </div>
                     </div>
                 </a>

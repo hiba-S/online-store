@@ -3,6 +3,8 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="base-url" content="{{ url('/') }}">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -12,7 +14,6 @@
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
     <script src="{{ asset('js/jquery-3.7.1.min.js') }}" defer></script>
-    <script src="{{ asset('js/owl.carousel.min.js') }}" defer></script>
     <script src="{{ asset('js/myJS.js') }}" defer></script>
 
     <!-- Fonts -->
@@ -72,7 +73,7 @@
                         @endif
                     @else
                         <li class="nav-item">
-                            <a class="nav-link" href="{{url('/cart')}}">Cart</a>
+                            <a class="nav-link" href="{{url('/cart')}}">Cart(<span id="cart-count"></span>)</a>
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">

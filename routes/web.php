@@ -23,7 +23,7 @@ use App\Http\Controllers\OrderController;
 Route::get('/', function () {
     $latestProducts = Product::all()->sortByDesc("id")->take(6);
     $discounts = Product::where('discount',">","0")->get()->sortByDesc("discount");
-    return view('index' , ['latestProducts' => $latestProducts , 'discounts' => $discounts] ); 
+    return view('index' , ['latestProducts' => $latestProducts , 'discounts' => $discounts] );
 });
 
 Auth::routes();
@@ -35,7 +35,7 @@ Route::group(['middleware'=>'auth'] , function () {
     Route::get('/dashboard', [HomeController::class, 'dashboard'])->name('dashboard');
 
     Route::middleware(['isAdmin'])->group(function(){
-    
+
         Route::get('/products/create', [ProductController::class,'create']);
         Route::get('/products/{product}/edit', [ProductController::class,'edit']);
         Route::post('/products',[ProductController::class,'store']);
@@ -61,13 +61,14 @@ Route::group(['middleware'=>'auth'] , function () {
 
     });
 
-    
+
     Route::get('/cart', function () {
         return view('user.cart');
     });
 
     Route::get('/cart',[CartController::class,'showCart']);
-    Route::get('/add-to-cart/{product_id}',[CartController::class,'store']);
+    Route::get('/cart/count', [CartController::class, 'getCartCount']);
+    Route::post('/add-to-cart/{product_id}',[CartController::class,'store']);
     Route::post('/update-quantity',[CartController::class,'update']);
     Route::get('/delete-cart-item/{cart}',[CartController::class,'destroy']);
     Route::get('/empty-cart',[CartController::class,'destroyCart']);

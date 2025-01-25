@@ -18,6 +18,12 @@ class CartController extends Controller
         ]) ;
     }
 
+    public function getCartCount()
+    {
+        $count = Cart::where('user_id', Auth::user()->id)->sum('quantity');
+        return response()->json(['cart_count' => $count]);
+    }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -83,7 +89,7 @@ class CartController extends Controller
         foreach ($cart as $item) {
             $item->delete();
         }
-        return view('user.cart' , ['cart' => Cart::where('user_id',Auth::user()->id)->first() , 
+        return view('user.cart' , ['cart' => Cart::where('user_id',Auth::user()->id)->first() ,
         ]);
     }
 }

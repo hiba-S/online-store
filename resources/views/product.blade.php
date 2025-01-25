@@ -11,17 +11,20 @@
             <div class="card-body mx-4">
               <h3 class="card-title pt-5">Name : {{$product->name}}</h3>
               <p class="card-text py-3">{{$product->description?$product->description:"No Description Available!"}}</p>
-              <p class="card-text py-3">Price : 
+              <p class="card-text py-3">Price :
                 @if ($product->discount)
                     <span style="text-decoration-line: line-through">{{$product->price}}</span>
                     <span>{{$product->price*$product->discount/100}}</span>
                 @else
-                    <span>{{$product->price}}</span>                    
-                @endif  
+                    <span>{{$product->price}}</span>
+                @endif
               </p>
               <p class="card-text py-3">Quantity : {{$product->quantity}}</p>
               @if (Auth::check())
-                <a href="" class="btn btn-primary"><img src = "{{url('images/icons/cart.svg')}}" alt="cart icon"/> Add To Cart </a>
+                <button class="btn btn-primary add-to-cart-btn" data-product-id="{{ $product->id }}" type="button">
+                    <img src="{{url('images/icons/cart.svg')}}" alt="cart icon"/>
+                    Add To Cart
+                </button>
               @endif
             </div>
           </div>
