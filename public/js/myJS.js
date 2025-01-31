@@ -1,5 +1,8 @@
 var BASE_URL = $('meta[name="base-url"]').attr('content');
 var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
+let lastScrollTop = 0;
+let navbarHeight = $('.navbar').outerHeight();
+
 $.ajaxSetup({
     headers: {
         'X-CSRF-TOKEN': CSRF_TOKEN
@@ -7,21 +10,23 @@ $.ajaxSetup({
     }
 });
 
-let lastScrollTop = 0;
-$(window).scroll(function() {
-    let scrollTop = $(this).scrollTop();
-
-    if (scrollTop > lastScrollTop) {
-        $('.navbar').addClass('hidden');  // Hide on scroll down
-    } else {
-        $('.navbar').removeClass('hidden');  // Show on scroll up
-    }
-    lastScrollTop = scrollTop;
-});
-
 $(document).ready(function(){
 
+    adjustBodyMargin();
     updateCartCount();
+
+    $(window).scroll(function() {
+        let scrollTop = $(this).scrollTop();
+
+        if (scrollTop > lastScrollTop) {
+            $('.navbar').addClass('hidden');  // Hide on scroll down
+        } else {
+            $('.navbar').removeClass('hidden');  // Show on scroll up
+        }
+        lastScrollTop = scrollTop;
+
+        adjustBodyMargin();
+    });
 
     $('.product-quantity').change(function() {
         if($(this).val()<=0){
@@ -64,6 +69,16 @@ $(document).ready(function(){
         });
     });
 });
+
+
+
+function adjustBodyMargin() {
+    if ($(window).scrollTop() === 0) {
+        $('body').css('margin-top', navbarHeight + 'px');  // Move body down
+    } else {
+        $('body').css('margin-top', '0');  // Reset margin when scrolling down
+    }
+}
 
 function updateCartCount() {
     $.ajax({

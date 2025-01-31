@@ -32,3 +32,8 @@
 .navbar.hidden {
     transform: translateY(-100%);
 }
+
+body{
+    margin-top: 64px;
+    transition: margin-top 0.3s ease-in-out;
+}
