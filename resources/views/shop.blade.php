@@ -7,7 +7,7 @@
             <div class="col">
                 <a href="{{url('/products/'.$product->id)}}" class="nav-link">
                     <div class="card " style="width: 18rem;">
-                        <img src="{{url($product->image)}}" class="card-img-top card-img-fixed-size-shop" alt="product image">
+                        <img src="{{url('storage/'.$product->image)}}" class="card-img-top card-img-fixed-size-shop" alt="product image">
                         <input class="card-id" type="hidden" value="{{$product->id}}">
                         <div class="card-body">
                         <h5 class="card-title">{{$product->name}}</h5>

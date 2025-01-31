@@ -28,7 +28,7 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        return view('user.profile' , ['user' => $user ]); 
+        return view('user.profile' , ['user' => $user ]);
     }
 
     /**
@@ -48,19 +48,10 @@ class UserController extends Controller
             'balance' => ['nullable', 'integer', 'min:0',],
         ]);
 
-        if(!is_null($request->image)){
-            $path = $user->image;
-            if(File::exists($path)){
-                File::delete($path);
-            }
-            $ext = $request->file('image')->getClientOriginalExtension();
-            $imageFileName = time().".".$ext;
-            $path = 'images/categories';
-            $request->file('image')->move($path,$imageFileName);
-            $imageFileNameWithPath = $path.'/'.$imageFileName;
-
-        }else{
-            $imageFileNameWithPath = $user->image;
+        $image = $user->image;
+        if($request->image){
+            delete_file_if_exist($user->image);
+            $image = upload_file($request->image, 'user', 'users');
         }
 
         $password = "";
@@ -79,13 +70,13 @@ class UserController extends Controller
                     $user->role =$request->role;
                 }
             }
-            
+
         }
         $user->name = $request->name;
         $user->email = $request->email;
-        $user->image = $imageFileNameWithPath;
+        $user->image = $image;
         $user->password = $password;
-        
+
         $user->save();
         return view('user.profile' , ['user' => $user , 'message' =>'Profile Updated successfully']);
     }
@@ -98,7 +89,7 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        $user->delete();                
+        $user->delete();
 
         return redirect()->route('dashboard')
         ->with('message', 'User Deleted successfully!');
@@ -116,7 +107,7 @@ class UserController extends Controller
         if ($user) {
             $user->balance += $request->balance;
             $user->save();
-            
+
             return redirect()->route('dashboard')
             ->with('message', 'Balance Added successfully!');
 

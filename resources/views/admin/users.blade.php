@@ -16,7 +16,7 @@
       <tbody>
         @forelse ($users as $user)
           <tr>
-            <th scope="row"><img src="{{url($user->image)}}" class="rounded users-img-fixed-size" alt="User Image"></th>
+            <th scope="row"><img src="{{url($user->image?'storage/'.$user->image:'images/default-avatar.png')}}" class="rounded users-img-fixed-size" alt="User Image"></th>
             <td>{{$user->name}}</td>
             <td>{{$user->email}}</td>
             <td>{{$user->role()}}</td>
@@ -29,7 +29,7 @@
             Error Happened , No users !
         @endforelse
       </tbody>
-    
+
 </table>
 
 

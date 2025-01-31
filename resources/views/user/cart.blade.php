@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container">
-    
+
 
 <table class="table ">
     {{-- table-hover --}}
@@ -29,7 +29,7 @@
       <tbody id="table-content">
         @forelse ($cart as $item)
           <tr>
-            <th scope="row"><img class="users-img-fixed-size" src="{{$item->product->image}}" alt=""></th>
+            <th scope="row"><img class="users-img-fixed-size" src="{{url('storage/'.$item->product->image)}}" alt=""></th>
             <td>{{$item->product->name}}</td>
             <td>
               <input type="number" class="product-quantity" name="quantity" value="{{$item->quantity}}">
@@ -42,7 +42,7 @@
               <input type="hidden" class="product_id" name="product_id" value="{{$item->product->id}}">
               <input type="hidden" class="quantity" name="quantity" value="{{$item->product->id}}">
             </td>
-            
+
           </tr>
         @empty
         <tr>
@@ -50,7 +50,7 @@
         </tr>
         @endforelse
       </tbody>
-    
+
 </table>
 <div class="container">
     @php
@@ -84,4 +84,4 @@
 </form>
 </div>
 
-@endsection 
+@endsection

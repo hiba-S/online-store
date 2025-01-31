@@ -49,26 +49,17 @@ class CategoryController extends Controller
             'parent_id' => 'nullable|exists:categories,id',
         ]);
 
+        $image = null;
         if ($request->file('image')) {
-            $ext = $request->file('image')->getClientOriginalExtension();
-            $imageFileName = time().".".$ext;
-            $path = 'images/categories';
-            $request->file('image')->move($path,$imageFileName);
-            
-            Category::create([
-                'name' => $request->name,
-                'image' => $path.'/'.$imageFileName,
-                'description' => $request->description,
-                'parent_id' =>  $request->parent_id,
-            ]);
-
-        }else{
-            Category::create([
-                'name' => $request->name,
-                'description' => $request->description,
-                'parent_id' =>  $request->parent_id,
-            ]);
+            $image = upload_file($request->image, 'category', 'categories');
         }
+
+        Category::create([
+            'name' => $request->name,
+            'image' => $image,
+            'description' => $request->description,
+            'parent_id' =>  $request->parent_id,
+        ]);
 
         return redirect()->route('dashboard')
         ->with('message', 'Category Created successfully!');
@@ -101,8 +92,8 @@ class CategoryController extends Controller
         $products = Product::whereIn('id', $products_ids)->get();
 
         return redirect()->route('shop')
-        ->with(['label' => 'Results' , 
-            'products' => $products , 
+        ->with(['label' => 'Results' ,
+            'products' => $products ,
         ]);
     }
 
@@ -114,8 +105,8 @@ class CategoryController extends Controller
         $products_ids = array_unique($products_ids);
         $products = Product::whereIn('id', $products_ids)->get();
 
-        return view('shop' , [ 
-        'products' => $products , 
+        return view('shop' , [
+        'products' => $products ,
         ]);
     }
 
@@ -149,7 +140,7 @@ class CategoryController extends Controller
     {
         return view('admin.category-form' , ['category' => $category,
             'categories' => Category::where('parent_id', null)->get() ,
-        ]);   
+        ]);
     }
 
     /**
@@ -168,24 +159,15 @@ class CategoryController extends Controller
             'parent_id' => 'nullable|exists:categories,id',
         ]);
 
-        if(!is_null($request->image)){
-            $path = $category->image;
-            if(File::exists($path)){
-                File::delete($path);
-            }
-            $ext = $request->file('image')->getClientOriginalExtension();
-            $imageFileName = time().".".$ext;
-            $path = 'images/categories';
-            $request->file('image')->move($path,$imageFileName);
-            $imageFileNameWithPath = $path.'/'.$imageFileName;
-
-        }else{
-            $imageFileNameWithPath = $category->image;
+        $image = $category->image;
+        if($request->image){
+            delete_file_if_exist($category->image);
+            $image = upload_file($request->image, 'category', 'categories');
         }
 
         $category->update([
             'name' => $request->name,
-            'image' => $imageFileNameWithPath,
+            'image' => $image,
             'description' => $request->description,
             'parent_id' =>  $request->parent_id,
         ]);
@@ -206,13 +188,13 @@ class CategoryController extends Controller
             DB::table('category_product')->where('product_id', $category->id)->delete();
 
             $path = $category->image;
-            if(File::exists($path) and $path!='images/categories/default-category.svg'){
-                File::delete($path);
-            }  
+            if($path!='images/categories/default-category.svg'){
+                delete_file_if_exist($category->image);
+            }
 
             $category->delete();
         });
-        
+
         return redirect()->route('dashboard')
         ->with('message', 'Category Deleted successfully!');
     }

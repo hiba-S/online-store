@@ -1,10 +1,10 @@
 @forelse ($categories as $category)
 <div class="px-4">
-    <a href="{{url('/categories/'.$category->id.'/products')}}" class='nav-link'> 
+    <a href="{{url('/categories/'.$category->id.'/products')}}" class='nav-link'>
     <div class="card mb-3 ml-3">
         <div class="row g-0">
         <div class="col-md-4 py-1">
-            <img src="{{url($category->image)}}" class="img-fluid rounded-start card-img-fixed-size" alt="category image">
+            <img src="{{url($category->image?'storage/'.$category->image:'images/default-category.svg')}}" class="img-fluid rounded-start card-img-fixed-size" alt="category image">
         </div>
         <div class="col-md-7">
             <div class="card-body mx-4">
@@ -22,9 +22,9 @@
     </div>
     </a>
 
-    @include('recursive-sub-category', ['categories' => $category->children()])        
+    @include('recursive-sub-category', ['categories' => $category->children()])
 </div>
 
 @empty
-    
+
 @endforelse

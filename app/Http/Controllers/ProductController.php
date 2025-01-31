@@ -54,21 +54,21 @@ class ProductController extends Controller
         ]);
 
         DB::transaction(function() use ($request) {
-            $ext = $request->file('image')->getClientOriginalExtension();
-            $imageFileName = time().".".$ext;
-            $path = 'images/categories';
-            $request->file('image')->move($path,$imageFileName);
+            $image = null;
+            if($request->image){
+                $image = upload_file($request->image, 'product', 'products');
+            }
 
             $product = Product::create([
                 'name' => $request->name,
-                'image' => 'images/categories/'.$imageFileName,
+                'image' => $image,
                 'description' => $request->description,
                 'quantity' =>  $request->quantity,
                 'price' =>  $request->price,
                 'discount' =>  $request->discount,
             ]);
             $selectedCategories = $request->input('selectedCategoriesIDArray');
-            if($selectedCategories){ 
+            if($selectedCategories){
                 foreach ($selectedCategories as $category) {
                     DB::table('category_product')->insert([
                         'category_id' => $category,
@@ -77,8 +77,6 @@ class ProductController extends Controller
                 }
             }
         });
-
-        
 
         return redirect()->route('dashboard')
         ->with('message', 'Product Created successfully!');
@@ -139,32 +137,23 @@ class ProductController extends Controller
             'quantity' => 'required|integer|min:0',
             'discount' => 'nullable|integer|max:100|min:0',
         ]);
-        
+
         DB::transaction(function() use ($product, $request) {
-            if(!is_null($request->image)){
-                $path = $product->image;
-                if(File::exists($path)){
-                    File::delete($path);
-                }
-                $ext = $request->file('image')->getClientOriginalExtension();
-                $imageFileName = time().".".$ext;
-                $path = 'images/products';
-                $request->file('image')->move($path,$imageFileName);
-                $imageFileNameWithPath = $path.'/'.$imageFileName;
-    
-            }else{
-                $imageFileNameWithPath = $product->image;
+            $image = $product->image;
+            if($request->image){
+                delete_file_if_exist($product->image);
+                $image = upload_file($request->image, 'product', 'products');
             }
 
             $product->update([
                 'name' => $request->name,
-                'image' => $imageFileNameWithPath,
+                'image' => $image,
                 'description' => $request->description,
                 'quantity' =>  $request->quantity,
                 'price' =>  $request->price,
                 'discount' =>  $request->discount,
             ]);
-    
+
             $selectedCategories = $request->input('selectedCategoriesIDArray');
             DB::table('category_product')->where('product_id' , $product->id)->delete();
             if($selectedCategories){
@@ -193,13 +182,11 @@ class ProductController extends Controller
         DB::transaction(function() use ($product) {
             DB::table('category_product')->where('product_id', $product->id)->delete();
             DB::table('carts')->where('product_id', $product->id)->delete();
-            $path = $product->image;
-            if(File::exists($path)){
-                File::delete($path);
-            }  
+            delete_file_if_exist($product->image);
+
             $product->delete();
         });
-        
+
         return redirect()->route('dashboard')
         ->with('message', 'Product Deleted successfully!');
     }

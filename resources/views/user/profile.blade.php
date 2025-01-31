@@ -10,7 +10,7 @@
         </div>
         @endisset
     </div>
-    <img src="{{url($user->image)}}" class="rounded-circle" alt="Profile Image">
+    <img src="{{url($user->image?'storage/'.$user->image:'images/default-avatar.png')}}" class="rounded-circle" alt="Profile Image">
     <form action="{{url('/users/'.$user->id)}}" method="post"  enctype="multipart/form-data">
         @csrf
         <div class="mb-3">
@@ -26,7 +26,7 @@
             <input class="form-control" type="file" id="image" name="image" >
             @error('image')
             <div class="small-alert">{{ $message }}</div>
-            @enderror 
+            @enderror
         </div>
 
         @can('changeRole', Auth::user())
@@ -37,7 +37,7 @@
                 <option {{$user->role==2?"selected":""}} name="role" value="2">Cashier</option>
                 <option {{$user->role==0?"selected":""}} name="role" value="0">User</option>
             </select>
-        </div>        
+        </div>
         @endcan
 
         @can('increaseBalance', Auth::user())
@@ -47,8 +47,8 @@
             @error('balance')
             <div class="small-alert">{{ $message }}</div>
             @enderror
-        </div> 
-        @else 
+        </div>
+        @else
         <div class="mb-3">
         <fieldset disabled>
             <label for="balance" class="form-label">Balance</label>
@@ -57,7 +57,7 @@
             <div class="small-alert">{{ $message }}</div>
             @enderror
         </fieldset>
-        </div>   
+        </div>
         @endcan
 
         <div class="mb-3">
