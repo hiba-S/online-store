@@ -78,7 +78,12 @@ class UserController extends Controller
         $user->password = $password;
 
         $user->save();
-        return view('user.profile' , ['user' => $user , 'message' =>'Profile Updated successfully']);
+
+        if(Auth::user()->role === 1)
+            return redirect()->route('dashboard')
+                ->with('message', 'User profile updated successfully!');
+
+        return view('user.profile' , ['user' => $user , 'message' =>'Profile Updated successfully!']);
     }
 
     /**

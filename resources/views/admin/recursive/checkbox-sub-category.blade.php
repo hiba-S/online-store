@@ -1,5 +1,5 @@
 @forelse ($categories as $subCategory)
-<div class="px-3"> 
+<div class="px-3">
 
 <div class="accordion-item">
     <h2 class="accordion-header">
@@ -10,12 +10,12 @@
                     {{$subCategory->name}}
                 </label>
             </div>
-                        
+
         </button>
     </h2>
     <div id="{{$subCategory->name}}" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
         <div class="accordion-body">
-            @include('admin.recursive.checkbox-sub-category', ['categories' => $subCategory->children()])        
+            @include('admin.recursive.checkbox-sub-category', ['categories' => $subCategory->children()])
         </div>
     </div>
 </div>
@@ -23,5 +23,5 @@
 </div>
 
 @empty
-    
+
 @endforelse
